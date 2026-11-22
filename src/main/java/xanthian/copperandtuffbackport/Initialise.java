@@ -3,6 +3,8 @@ package xanthian.copperandtuffbackport;
 import net.fabricmc.api.ModInitializer;
 import xanthian.copperandtuffbackport.blocks.ModCopperBlocks;
 import xanthian.copperandtuffbackport.blocks.ModTuffBlocks;
+import xanthian.copperandtuffbackport.blocks.ModCopperAgeBlocks;
+import xanthian.copperandtuffbackport.blocks.ModCopperDecorations;
 import xanthian.copperandtuffbackport.util.ModItemGroup;
 import xanthian.copperandtuffbackport.util.ModRegistries;
 import xanthian.copperandtuffbackport.util.ModSounds;
@@ -16,10 +18,10 @@ public class Initialise implements ModInitializer {
 
         ModCopperBlocks.registerBlocks();
         ModTuffBlocks.registerBlocks();
+        ModCopperAgeBlocks.register();
+        ModCopperDecorations.register();
 
-        ModItemGroup.addToBuildingBlocks();
-        ModItemGroup.addToRedstoneBlocks();
-        ModItemGroup.addToFunctionalBlocks();
+        ModItemGroup.register();
         ModSounds.registerSounds();
         ModRegistries.registerOxidizableBlocks();
 

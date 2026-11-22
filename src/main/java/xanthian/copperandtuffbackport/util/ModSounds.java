@@ -8,6 +8,10 @@ import net.minecraft.util.Identifier;
 import xanthian.copperandtuffbackport.Initialise;
 
 public class ModSounds {
+    public static final SoundEvent[] COPPER_CHEST_OPEN = {
+            register("block.copper_chest.open"), register("block.copper_chest_weathered.open"), register("block.copper_chest_oxidized.open")};
+    public static final SoundEvent[] COPPER_CHEST_CLOSE = {
+            register("block.copper_chest.close"), register("block.copper_chest_weathered.close"), register("block.copper_chest_oxidized.close")};
 
     public static final SoundEvent BLOCK_TUFF_BRICKS_BREAK = register("block.tuff_bricks.break");
     public static final SoundEvent BLOCK_TUFF_BRICKS_FALL = register("block.tuff_bricks.fall");

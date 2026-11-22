@@ -1,12 +1,11 @@
 plugins {
-    id 'fabric-loom' version '1.5-SNAPSHOT'
+    id 'net.fabricmc.fabric-loom-remap' version "${loom_version}"
     id 'maven-publish'
 }
 
-sourceCompatibility = JavaVersion.VERSION_17
-targetCompatibility = JavaVersion.VERSION_17
-
-archivesBaseName = project.archives_base_name
+base {
+    archivesName = project.archives_base_name
+}
 version = project.mod_version
 group = project.maven_group
 
@@ -14,14 +13,11 @@ repositories {
 
 }
 
-configurations.all {
-    resolutionStrategy {
-        force("net.fabricmc:fabric-loader:$loader_version")
-    }
-}
-
 dependencies {
-    implementation 'org.jetbrains:annotations:24.0.0'
+    compileOnly 'org.jetbrains:annotations:24.0.0'
+    // These injectors are supplied at runtime by Fabric Loader 0.15+.
+    compileOnly 'io.github.llamalad7:mixinextras-fabric:0.3.5'
+    annotationProcessor 'io.github.llamalad7:mixinextras-fabric:0.3.5'
 
     minecraft "com.mojang:minecraft:${project.minecraft_version}"
     mappings "net.fabricmc:yarn:${project.yarn_mappings}:v2"
@@ -29,16 +25,55 @@ dependencies {
     modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
 }
 
+sourceSets {
+    clientSmoke {
+        compileClasspath += sourceSets.main.compileClasspath + sourceSets.main.output
+        runtimeClasspath += sourceSets.main.runtimeClasspath + sourceSets.main.output
+    }
+    gametest {
+        compileClasspath += sourceSets.main.compileClasspath + sourceSets.main.output
+        runtimeClasspath += sourceSets.main.runtimeClasspath + sourceSets.main.output
+    }
+}
+
+dependencies {
+    modImplementation fabricApi.module('fabric-gametest-api-v1', project.fabric_version)
+}
+
+loom {
+    mods {
+        copperandtuffbackport { sourceSet sourceSets.main }
+        copperandtuffbackport_test { sourceSet sourceSets.gametest }
+        copperandtuffbackport_client_smoke { sourceSet sourceSets.clientSmoke }
+    }
+    runs {
+        clientSmoke {
+            client()
+            name = 'Copper Age rendering smoke test'
+            source sourceSets.clientSmoke
+            runDir 'build/client-smoke'
+            programArgs '--width', '960', '--height', '900'
+        }
+        gametest {
+            server()
+            name = 'Block parity tests'
+            source sourceSets.gametest
+            vmArg '-Dfabric-api.gametest'
+            vmArg "-Dfabric-api.gametest.report-file=${layout.buildDirectory.file('gametest-results.xml').get().asFile}"
+            runDir 'build/gametest'
+        }
+    }
+}
+
 processResources {
-    inputs.property "version", project.version
-    inputs.property "minecraft_version", project.minecraft_version
-    inputs.property "loader_version", project.loader_version
-    filteringCharset "UTF-8"
+    def resourceProperties = [version: project.version,
+                              minecraft_version: project.minecraft_version,
+                              loader_version: project.loader_version]
+    inputs.properties resourceProperties
+    filteringCharset = "UTF-8"
 
     filesMatching("fabric.mod.json") {
-        expand "version": project.version,
-                "minecraft_version": project.minecraft_version,
-                "loader_version": project.loader_version
+        expand resourceProperties
     }
 }
 
@@ -46,24 +81,19 @@ def targetJavaVersion = 17
 tasks.withType(JavaCompile).configureEach {
 
     it.options.encoding = "UTF-8"
-    if (targetJavaVersion >= 10 || JavaVersion.current().isJava10Compatible()) {
-        it.options.release = targetJavaVersion
-    }
+    it.options.release = targetJavaVersion
 }
 
 java {
-    def javaVersion = JavaVersion.toVersion(targetJavaVersion)
-    if (JavaVersion.current() < javaVersion) {
-        toolchain.languageVersion = JavaLanguageVersion.of(targetJavaVersion)
-    }
-    archivesBaseName = project.archives_base_name
+    toolchain.languageVersion = JavaLanguageVersion.of(targetJavaVersion)
 
     withSourcesJar()
 }
 
 jar {
+    def licenseSuffix = project.base.archivesName.get()
     from("LICENSE") {
-        rename { "${it}_${project.archivesBaseName}"}
+        rename { "${it}_${licenseSuffix}"}
     }
 }
 

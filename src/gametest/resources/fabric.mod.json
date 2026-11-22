@@ -1,0 +1,12 @@
+{
+  "schemaVersion": 1,
+  "id": "copperandtuffbackport_test",
+  "version": "1.0.0",
+  "name": "Copper and Tuff parity tests",
+  "environment": "*",
+  "mixins": ["mixin-cooperation-tests.json"],
+  "entrypoints": {
+    "main": ["xanthian.copperandtuffbackport.CopperDecorationTests"],
+    "fabric-gametest": ["xanthian.copperandtuffbackport.BlockParityTests", "xanthian.copperandtuffbackport.CopperParityTests", "xanthian.copperandtuffbackport.CopperAgeTests", "xanthian.copperandtuffbackport.CopperDecorationTests", "xanthian.copperandtuffbackport.ItemGroupTests", "xanthian.copperandtuffbackport.MixinCooperationTests"]
+  }
+}

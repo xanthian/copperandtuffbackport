@@ -1,0 +1,6 @@
+{
+  "parent": "copperandtuffbackport:block/template_lightning_rod",
+  "textures": {
+    "texture": "copperandtuffbackport:block/weathered_lightning_rod"
+  }
+}

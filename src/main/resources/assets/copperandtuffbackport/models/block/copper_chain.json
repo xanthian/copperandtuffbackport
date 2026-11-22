@@ -1,0 +1,6 @@
+{
+  "parent": "copperandtuffbackport:block/template_chain",
+  "textures": {
+    "texture": "copperandtuffbackport:block/copper_chain"
+  }
+}
