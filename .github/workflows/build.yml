@@ -22,6 +22,20 @@ jobs:
       - name: Make wrapper executable
         if: runner.os != 'Windows'
         run: chmod +x ./gradlew
+      - name: Download Minecraft assets with retries
+        shell: bash
+        run: |
+          for attempt in 1 2 3; do
+            if ./gradlew -Ploader=${{ matrix.loader }} downloadAssets --no-daemon; then
+              exit 0
+            fi
+            if [ "$attempt" -lt 3 ]; then
+              echo "Asset download attempt $attempt failed; retrying missing assets in 10 seconds."
+              sleep 10
+            fi
+          done
+          echo "Minecraft asset downloads failed after three attempts."
+          exit 1
       - name: Build and test
         run: ./gradlew -Ploader=${{ matrix.loader }} build runGameTestServer --no-daemon
       - uses: actions/upload-artifact@v6
