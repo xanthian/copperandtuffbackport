@@ -25,7 +25,10 @@ jobs:
       - name: Build and test
         run: ./gradlew -Ploader=${{ matrix.loader }} build runGameTestServer --no-daemon
       - uses: actions/upload-artifact@v6
-        if: runner.os == 'Linux'
+        if: runner.os == 'Linux' && matrix.loader == 'neoforge'
         with:
-          name: ${{ matrix.loader }}-Artifacts
-          path: build/libs/*Forge-NeoForge*.jar
+          name: CopperandTuffBackport-Forge-NeoForge
+          path: |
+            build/libs/CopperandTuffBackport-Forge-NeoForge-*.jar
+            !build/libs/*-sources.jar
+          if-no-files-found: error
