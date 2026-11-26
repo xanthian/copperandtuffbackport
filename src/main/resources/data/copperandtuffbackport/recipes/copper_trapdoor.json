@@ -3,15 +3,15 @@
   "category": "redstone",
   "key": {
     "#": {
-      "item": "minecraft:copper_block"
+      "item": "minecraft:copper_ingot"
     }
   },
   "pattern": [
-    "###",
-    "###"
+    "##",
+    "##"
   ],
   "result": {
-    "count": 2,
+    "count": 1,
     "item": "copperandtuffbackport:copper_trapdoor"
   }
 }

@@ -1,0 +1,17 @@
+{
+    "type":  "minecraft:crafting_shapeless",
+    "category":  "building",
+    "group":  "waxed_copper_chain",
+    "ingredients":  [
+                        {
+                            "item":  "copperandtuffbackport:copper_chain"
+                        },
+                        {
+                            "item":  "minecraft:honeycomb"
+                        }
+                    ],
+    "result":  {
+                   "count":  1,
+                   "item":  "copperandtuffbackport:waxed_copper_chain"
+               }
+}

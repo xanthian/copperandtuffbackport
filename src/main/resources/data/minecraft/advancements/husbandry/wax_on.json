@@ -1,0 +1,107 @@
+{
+    "parent":  "minecraft:husbandry/safely_harvest_honey",
+    "criteria":  {
+                     "wax_on":  {
+                                    "conditions":  {
+                                                       "location":  [
+                                                                        {
+                                                                            "condition":  "minecraft:location_check",
+                                                                            "predicate":  {
+                                                                                              "block":  {
+                                                                                                            "blocks":  [
+                                                                                                                           "minecraft:copper_block",
+                                                                                                                           "minecraft:exposed_copper",
+                                                                                                                           "minecraft:weathered_copper",
+                                                                                                                           "minecraft:oxidized_copper",
+                                                                                                                           "minecraft:cut_copper",
+                                                                                                                           "minecraft:exposed_cut_copper",
+                                                                                                                           "minecraft:weathered_cut_copper",
+                                                                                                                           "minecraft:oxidized_cut_copper",
+                                                                                                                           "minecraft:cut_copper_slab",
+                                                                                                                           "minecraft:exposed_cut_copper_slab",
+                                                                                                                           "minecraft:weathered_cut_copper_slab",
+                                                                                                                           "minecraft:oxidized_cut_copper_slab",
+                                                                                                                           "minecraft:cut_copper_stairs",
+                                                                                                                           "minecraft:exposed_cut_copper_stairs",
+                                                                                                                           "minecraft:weathered_cut_copper_stairs",
+                                                                                                                           "minecraft:oxidized_cut_copper_stairs",
+                                                                                                                           "copperandtuffbackport:chiseled_copper",
+                                                                                                                           "copperandtuffbackport:copper_bars",
+                                                                                                                           "copperandtuffbackport:copper_bulb",
+                                                                                                                           "copperandtuffbackport:copper_chain",
+                                                                                                                           "copperandtuffbackport:copper_chest",
+                                                                                                                           "copperandtuffbackport:copper_door",
+                                                                                                                           "copperandtuffbackport:copper_grate",
+                                                                                                                           "copperandtuffbackport:copper_lantern",
+                                                                                                                           "copperandtuffbackport:copper_torch",
+                                                                                                                           "copperandtuffbackport:copper_trapdoor",
+                                                                                                                           "copperandtuffbackport:exposed_chiseled_copper",
+                                                                                                                           "copperandtuffbackport:exposed_copper_bars",
+                                                                                                                           "copperandtuffbackport:exposed_copper_bulb",
+                                                                                                                           "copperandtuffbackport:exposed_copper_chain",
+                                                                                                                           "copperandtuffbackport:exposed_copper_chest",
+                                                                                                                           "copperandtuffbackport:exposed_copper_door",
+                                                                                                                           "copperandtuffbackport:exposed_copper_grate",
+                                                                                                                           "copperandtuffbackport:exposed_copper_lantern",
+                                                                                                                           "copperandtuffbackport:exposed_copper_trapdoor",
+                                                                                                                           "copperandtuffbackport:exposed_lightning_rod",
+                                                                                                                           "copperandtuffbackport:oxidized_chiseled_copper",
+                                                                                                                           "copperandtuffbackport:oxidized_copper_bars",
+                                                                                                                           "copperandtuffbackport:oxidized_copper_bulb",
+                                                                                                                           "copperandtuffbackport:oxidized_copper_chain",
+                                                                                                                           "copperandtuffbackport:oxidized_copper_chest",
+                                                                                                                           "copperandtuffbackport:oxidized_copper_door",
+                                                                                                                           "copperandtuffbackport:oxidized_copper_grate",
+                                                                                                                           "copperandtuffbackport:oxidized_copper_lantern",
+                                                                                                                           "copperandtuffbackport:oxidized_copper_trapdoor",
+                                                                                                                           "copperandtuffbackport:oxidized_lightning_rod",
+                                                                                                                           "copperandtuffbackport:weathered_chiseled_copper",
+                                                                                                                           "copperandtuffbackport:weathered_copper_bars",
+                                                                                                                           "copperandtuffbackport:weathered_copper_bulb",
+                                                                                                                           "copperandtuffbackport:weathered_copper_chain",
+                                                                                                                           "copperandtuffbackport:weathered_copper_chest",
+                                                                                                                           "copperandtuffbackport:weathered_copper_door",
+                                                                                                                           "copperandtuffbackport:weathered_copper_grate",
+                                                                                                                           "copperandtuffbackport:weathered_copper_lantern",
+                                                                                                                           "copperandtuffbackport:weathered_copper_trapdoor",
+                                                                                                                           "copperandtuffbackport:weathered_lightning_rod",
+                                                                                                                           "minecraft:lightning_rod"
+                                                                                                                       ]
+                                                                                                        }
+                                                                                          }
+                                                                        },
+                                                                        {
+                                                                            "condition":  "minecraft:match_tool",
+                                                                            "predicate":  {
+                                                                                              "items":  [
+                                                                                                            "minecraft:honeycomb"
+                                                                                                        ]
+                                                                                          }
+                                                                        }
+                                                                    ]
+                                                   },
+                                    "trigger":  "minecraft:item_used_on_block"
+                                }
+                 },
+    "display":  {
+                    "announce_to_chat":  true,
+                    "description":  {
+                                        "translate":  "advancements.husbandry.wax_on.description"
+                                    },
+                    "frame":  "task",
+                    "hidden":  false,
+                    "icon":  {
+                                 "item":  "minecraft:honeycomb"
+                             },
+                    "show_toast":  true,
+                    "title":  {
+                                  "translate":  "advancements.husbandry.wax_on.title"
+                              }
+                },
+    "requirements":  [
+                         [
+                             "wax_on"
+                         ]
+                     ],
+    "sends_telemetry_event":  true
+}

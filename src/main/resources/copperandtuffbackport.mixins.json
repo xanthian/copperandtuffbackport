@@ -1,15 +1,18 @@
 {
-  "required": true,
-  "minVersion": "0.8",
-  "priority": 1100,
-  "package": "xanthian.copperandtuffbackport.mixin",
-  "refmap": "copperandtuffbackport.refmap.json",
-  "compatibilityLevel": "JAVA_17",
-  "mixins": [
-    "AxeItemMixin",
-    "HoneycombItemMixin"
-  ],
-  "injectors": {
-    "defaultRequire": 1
-  }
+    "required":  true,
+    "package":  "xanthian.copperandtuffbackport.mixin",
+    "compatibilityLevel":  "JAVA_17",
+    "mixins":  [
+                   "OpenDoorsTaskMixin",
+                   "ChestBlockEntityMixin",
+                   "WeatheringVanillaRodMixin",
+                   "LightningEntityMixin",
+                   "ServerWorldLightningRodMixin",
+                   "CopperWaxingMapsMixin"
+               ],
+    "injectors":  {
+                      "defaultRequire":  1
+                  },
+    "refmap":  "copperandtuffbackport.refmap.json",
+    "minVersion":  "0.8.5"
 }

@@ -1,0 +1,13 @@
+{
+    "replace":  false,
+    "values":  [
+                   "copperandtuffbackport:exposed_lightning_rod",
+                   "copperandtuffbackport:oxidized_lightning_rod",
+                   "copperandtuffbackport:waxed_exposed_lightning_rod",
+                   "copperandtuffbackport:waxed_lightning_rod",
+                   "copperandtuffbackport:waxed_oxidized_lightning_rod",
+                   "copperandtuffbackport:waxed_weathered_lightning_rod",
+                   "copperandtuffbackport:weathered_lightning_rod",
+                   "minecraft:lightning_rod"
+               ]
+}

@@ -1,176 +1,99 @@
-buildscript {
-    repositories {
-        maven { url = 'https://maven.minecraftforge.net' }
-        maven { url = 'https://repo.spongepowered.org/repository/maven-public/' }
-        maven { url = 'https://maven.parchmentmc.org' }
-    }
-    dependencies {
-        classpath "net.minecraftforge.gradle:ForgeGradle:${forgegradle_version}"
-        classpath "org.spongepowered:mixingradle:${mixingradle_version}"
-    }
-}
-
 plugins {
-    id 'idea'
+    id 'java-library'
     id 'maven-publish'
-    id 'net.minecraftforge.gradle' version '[6.0,6.2)'
-    id 'org.parchmentmc.librarian.forgegradle' version '1.+'
-    id 'org.spongepowered.mixin' version '0.7.+'
+    id 'net.neoforged.moddev.legacyforge' version '2.0.148'
 }
-apply plugin: 'org.spongepowered.mixin'
-
+def targetLoader = providers.gradleProperty('loader').getOrElse('forge')
+if (!(targetLoader in ['forge', 'neoforge'])) throw new GradleException('loader must be forge or neoforge')
 version = mod_version
 group = mod_group_id
-
-base {
-    archivesName = mod_id
+base { archivesName = 'CopperandTuffBackport-Forge-NeoForge' }
+java { toolchain.languageVersion = JavaLanguageVersion.of(17); withSourcesJar() }
+repositories { mavenCentral() }
+sourceSets {
+    clientSmoke {
+        compileClasspath += sourceSets.main.compileClasspath + sourceSets.main.output
+        runtimeClasspath += sourceSets.main.runtimeClasspath + sourceSets.main.output
+    }
+    gametest {
+        compileClasspath += sourceSets.main.compileClasspath + sourceSets.main.output
+        runtimeClasspath += sourceSets.main.runtimeClasspath + sourceSets.main.output
+    }
 }
-
-java.toolchain.languageVersion = JavaLanguageVersion.of(17)
-
-println "Java: ${System.getProperty 'java.version'}, JVM: ${System.getProperty 'java.vm.version'} (${System.getProperty 'java.vendor'}), Arch: ${System.getProperty 'os.arch'}"
-minecraft {
-    mappings channel: mapping_channel, version: mapping_version
-    copyIdeResources = true
+tasks.register('prepareClientSmoke') {
+    doLast {
+        def config = layout.buildDirectory.file("client-smoke-${targetLoader}/config/fml.toml").get().asFile
+        config.parentFile.mkdirs()
+        config.text = 'earlyWindowControl = false\n'
+        new File(config.parentFile.parentFile, 'smoke-success.flag').delete()
+    }
+}
+legacyForge {
+    enable {
+        if (targetLoader == 'neoforge') neoForgeVersion = "${minecraft_version}-${neoforge_version}"
+        else forgeVersion = "${minecraft_version}-${forge_version}"
+        disableRecompilation = true
+    }
+    mods {
+        copperandtuffbackport { sourceSet sourceSets.main }
+        copperandtuffbackport_client_smoke { sourceSet sourceSets.clientSmoke }
+        copperandtuffbackport_test { sourceSet sourceSets.gametest }
+    }
     runs {
-        client {
-            workingDirectory project.file('run')
-
-            property 'forge.logging.markers', 'REGISTRIES'
-
-            property 'forge.logging.console.level', 'debug'
-
-            property 'forge.enabledGameTestNamespaces', mod_id
-
-            mods {
-                "${mod_id}" {
-                    source sourceSets.main
-                }
-            }
+        clientSmoke {
+            client()
+            sourceSet = sourceSets.clientSmoke
+            loadedMods = [mods.copperandtuffbackport, mods.copperandtuffbackport_client_smoke]
+            gameDirectory = layout.buildDirectory.dir("client-smoke-${targetLoader}").get().asFile
+            programArguments.addAll '--width', '960', '--height', '900', '--mixin.config', 'client-smoke.mixins.json'
+            systemProperty 'fml.earlyprogresswindow', 'false'
+            taskBefore tasks.named('prepareClientSmoke')
         }
-
-        server {
-            workingDirectory project.file('run')
-            arg '-mixin.config=copperandtuffbackport.mixins.json'
-            property 'forge.logging.markers', 'REGISTRIES'
-
-            property 'forge.logging.console.level', 'debug'
-
-            property 'forge.enabledGameTestNamespaces', mod_id
-
-            mods {
-                "${mod_id}" {
-                    source sourceSets.main
-                }
-            }
-        }
-
+        client { client(); loadedMods = [mods.copperandtuffbackport] }
+        server { server(); programArgument '--nogui'; loadedMods = [mods.copperandtuffbackport] }
         gameTestServer {
-            workingDirectory project.file('run')
-            arg '-mixin.config=copperandtuffbackport.mixins.json'
-            property 'forge.logging.markers', 'REGISTRIES'
-
-            property 'forge.logging.console.level', 'debug'
-
-            property 'forge.enabledGameTestNamespaces', mod_id
-
-            mods {
-                "${mod_id}" {
-                    source sourceSets.main
-                }
-            }
-        }
-
-        data {
-            workingDirectory project.file('run')
-            arg '-mixin.config=copperandtuffbackport.mixins.json'
-            property 'forge.logging.markers', 'REGISTRIES'
-
-            property 'forge.logging.console.level', 'debug'
-
-            args '--mod', mod_id, '--all', '--output', file('src/generated/resources/'), '--existing', file('src/main/resources/')
-
-            mods {
-                "${mod_id}" {
-                    source sourceSets.main
-                }
-            }
+            type = 'gameTestServer'
+            programArguments.addAll '--mixin.config', 'mixin-cooperation-tests.json'
+            gameDirectory = layout.buildDirectory.dir("gametest-${targetLoader}").get().asFile
+            sourceSet = sourceSets.gametest
+            loadedMods = [mods.copperandtuffbackport, mods.copperandtuffbackport_test]
+            systemProperty 'forge.enabledGameTestNamespaces', 'copperandtuffbackport,copperandtuffbackport_test'
         }
     }
 }
-
-repositories {
-    exclusiveContent {
-        forRepository {
-            maven {
-                url "https://cursemaven.com"
-            }
-        }
-        filter {
-            includeGroup "curse.maven"
-        }
-    }
-}
-def resourceTargets = ['META-INF/mods.toml', 'pack.mcmeta']
-def replaceProperties = [
-        minecraft_version   : minecraft_version, minecraft_version_range: minecraft_version_range,
-        forge_version       : forge_version, forge_version_range: forge_version_range,
-        loader_version_range: loader_version_range,
-        mod_id              : mod_id, mod_name: mod_name, mod_license: mod_license, mod_version: mod_version,
-        mod_authors         : mod_authors, mod_description: mod_description
-]
-
 dependencies {
-
-    minecraft "net.minecraftforge:forge:${minecraft_version}-${forge_version}"
-
     annotationProcessor 'org.spongepowered:mixin:0.8.5:processor'
-
+    compileOnly(annotationProcessor('io.github.llamalad7:mixinextras-common:0.5.5'))
+    jarJar(implementation('io.github.llamalad7:mixinextras-forge:0.5.5')) {
+        version { strictly '[0.5.5,)'; prefer '0.5.5' }
+    }
 }
-
+configurations.clientSmokeAnnotationProcessor.extendsFrom configurations.annotationProcessor
+configurations.gametestAnnotationProcessor.extendsFrom configurations.annotationProcessor
 mixin {
+    add sourceSets.gametest, 'gametest.refmap.json'
+    add sourceSets.clientSmoke, 'client-smoke.refmap.json'
     add sourceSets.main, 'copperandtuffbackport.refmap.json'
     config 'copperandtuffbackport.mixins.json'
 }
-
 processResources {
-    inputs.properties replaceProperties
-    replaceProperties.put 'project', project
-
-    filesMatching(resourceTargets) {
-        expand replaceProperties
+    inputs.property 'mod_version', project.version
+    filesMatching('META-INF/mods.toml') { expand mod_version: project.version }
+}
+jar { manifest.attributes('MixinConfigs': 'copperandtuffbackport.mixins.json', 'Implementation-Version': project.version) }
+tasks.withType(JavaCompile).configureEach { options.encoding = 'UTF-8'; options.release = 17 }
+tasks.named('runGameTestServer').configure {
+    doFirst { layout.buildDirectory.file("gametest-${targetLoader}/logs/latest.log").get().asFile.delete() }
+    doLast {
+        def log = layout.buildDirectory.file("gametest-${targetLoader}/logs/latest.log").get().asFile
+        if (!log.exists() || !(log.text =~ /All 28 required tests passed/).find())
+            throw new GradleException("The 28 parity tests did not pass on ${targetLoader}; inspect ${log}.")
     }
 }
-
-jar {
-    manifest {
-        attributes([
-                "Specification-Title"     : mod_id,
-                "Specification-Vendor"    : mod_authors,
-                "Specification-Version"   : "1", // We are version 1 of ourselves
-                "Implementation-Title"    : project.name,
-                "Implementation-Version"  : project.jar.archiveVersion,
-                "Implementation-Vendor"   : mod_authors,
-                "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ")
-        ])
+tasks.named('runClientSmoke').configure {
+    doLast {
+        def flag = layout.buildDirectory.file("client-smoke-${targetLoader}/smoke-success.flag").get().asFile
+        if (!flag.exists() || flag.text != 'passed') throw new GradleException("Client rendering check did not finish on ${targetLoader}.")
     }
 }
-
-jar.finalizedBy('reobfJar')
-
-publishing {
-    publications {
-        mavenJava(MavenPublication) {
-            artifact jar
-        }
-    }
-    repositories {
-        maven {
-            url "file://${project.projectDir}/mcmodsrepo"
-        }
-    }
-}
-
-tasks.withType(JavaCompile).configureEach {
-    options.encoding = 'UTF-8'
-}
+tasks.named('reobfJar').configure { dependsOn tasks.named('compileGametestJava'), tasks.named('compileClientSmokeJava') }

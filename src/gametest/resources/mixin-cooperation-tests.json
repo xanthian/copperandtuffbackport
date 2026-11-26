@@ -1,0 +1,15 @@
+{
+    "required":  true,
+    "package":  "xanthian.copperandtuffbackport.gametest.testmixin",
+    "compatibilityLevel":  "JAVA_17",
+    "mixins":  [
+                   "LightningOperationObserverMixin",
+                   "DoorTagObserverMixin",
+                   "ChestSoundObserverMixin"
+               ],
+    "injectors":  {
+                      "defaultRequire":  1
+                  },
+    "refmap":  "gametest.refmap.json",
+    "minVersion":  "0.8.5"
+}

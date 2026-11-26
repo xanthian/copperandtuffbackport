@@ -1,0 +1,21 @@
+{
+    "type":  "minecraft:crafting_shaped",
+    "category":  "misc",
+    "key":  {
+                "I":  {
+                          "item":  "minecraft:copper_ingot"
+                      },
+                "N":  {
+                          "tag":  "copperandtuffbackport:copper_nuggets"
+                      }
+            },
+    "pattern":  [
+                    "N",
+                    "I",
+                    "N"
+                ],
+    "result":  {
+                   "count":  1,
+                   "item":  "copperandtuffbackport:copper_chain"
+               }
+}
