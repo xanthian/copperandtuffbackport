@@ -18,6 +18,8 @@ import xanthian.copperandtuffbackport.client.CopperChestRenderer;
 
 @Mod.EventBusSubscriber(modid = Initialise.MOD_ID, bus = Mod.EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
 public final class ClientInit {
+    // Both 1.20.1 loaders support this layer registration, including models supplied by resource packs.
+    @SuppressWarnings("removal")
     @SubscribeEvent public static void setup(FMLClientSetupEvent event) {
         event.enqueueWork(() -> ForgeRegistries.BLOCKS.getEntries().forEach(entry -> {
             Block block = entry.getValue();

@@ -15,7 +15,7 @@ import net.minecraft.world.level.block.Block;
 public abstract class OpenDoorsTaskMixin {
     @Unique
     private static final TagKey<Block> copperandtuffbackport$mobDoors =
-            TagKey.create(Registries.BLOCK, new ResourceLocation("minecraft", "mob_interactable_doors"));
+            TagKey.create(Registries.BLOCK, ResourceLocation.tryBuild("minecraft", "mob_interactable_doors"));
 
     // 1.21 uses this tag for villagers and other brain-driven door users.
     @ModifyExpressionValue(method = "*", at = @At(value = "FIELD",

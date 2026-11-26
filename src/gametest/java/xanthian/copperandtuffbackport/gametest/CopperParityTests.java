@@ -41,7 +41,7 @@ public class CopperParityTests {
     private static Block copper(String family, int level, boolean waxed) {
         String name = LEVELS[level] + (family.equals("copper_block") && level > 0 ? "copper" : family);
         boolean vanilla = family.equals("copper_block") || family.startsWith("cut_copper");
-        return BuiltInRegistries.BLOCK.get(new ResourceLocation(vanilla ? "minecraft" : Initialise.MOD_ID, (waxed ? "waxed_" : "") + name));
+        return BuiltInRegistries.BLOCK.get(ResourceLocation.tryBuild(vanilla ? "minecraft" : Initialise.MOD_ID, (waxed ? "waxed_" : "") + name));
     }
 
     private static BlockState configured(Block block) {
@@ -76,7 +76,7 @@ public class CopperParityTests {
             var id = advancement.getId();
             if (!id.getNamespace().equals(Initialise.MOD_ID) || !id.getPath().startsWith("recipes/")) continue;
             String name = id.getPath().substring(id.getPath().lastIndexOf('/') + 1);
-            var recipe = world.getRecipeManager().byKey(new ResourceLocation(Initialise.MOD_ID, name)).orElseThrow();
+            var recipe = world.getRecipeManager().byKey(ResourceLocation.tryBuild(Initialise.MOD_ID, name)).orElseThrow();
             player.getRecipeBook().remove(recipe);
             tracker.revoke(advancement, "has_the_recipe");
             tracker.award(advancement, "has_the_recipe");
@@ -93,8 +93,8 @@ public class CopperParityTests {
         var world = context.getLevel();
         var player = ForgeTestPlayers.creative(context);
         var tracker = player.getAdvancements();
-        var waxOn = world.getServer().getAdvancements().getAdvancement(new ResourceLocation("minecraft", "husbandry/wax_on"));
-        var waxOff = world.getServer().getAdvancements().getAdvancement(new ResourceLocation("minecraft", "husbandry/wax_off"));
+        var waxOn = world.getServer().getAdvancements().getAdvancement(ResourceLocation.tryBuild("minecraft", "husbandry/wax_on"));
+        var waxOff = world.getServer().getAdvancements().getAdvancement(ResourceLocation.tryBuild("minecraft", "husbandry/wax_off"));
         context.assertTrue(waxOn != null && waxOff != null, "Vanilla waxing advancements must load");
         BlockPos pos = context.absolutePos(new BlockPos(3, 3, 3));
         var hit = new BlockHitResult(Vec3.atCenterOf(pos), Direction.UP, pos, false);

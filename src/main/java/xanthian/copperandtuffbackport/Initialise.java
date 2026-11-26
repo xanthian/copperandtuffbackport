@@ -14,6 +14,8 @@ import xanthian.copperandtuffbackport.util.*;
 @Mod(Initialise.MOD_ID)
 public final class Initialise {
     public static final String MOD_ID = "copperandtuffbackport";
+    // Legacy NeoForge 1.20.1 uses the static context accessor; retain the shared loader entry point.
+    @SuppressWarnings("removal")
     public Initialise() {
         ModSounds.registerSounds();
         ModCopperDecorations.prepare();
@@ -46,5 +48,5 @@ public final class Initialise {
             event.register(Registries.BLOCK_ENTITY_TYPE, id("copper_chest"), () -> ModCopperAgeBlocks.CHEST_ENTITY);
         }
     }
-    public static ResourceLocation id(String path) { return new ResourceLocation(MOD_ID, path); }
+    public static ResourceLocation id(String path) { return ResourceLocation.tryBuild(MOD_ID, path); }
 }

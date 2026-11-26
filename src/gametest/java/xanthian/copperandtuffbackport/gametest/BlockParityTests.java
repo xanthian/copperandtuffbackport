@@ -32,7 +32,7 @@ import xanthian.copperandtuffbackport.blocks.custom.CopperGrateBlock;
 @net.minecraftforge.gametest.PrefixGameTestTemplate(false)
 public class BlockParityTests {
     private static Block block(String name) {
-        return BuiltInRegistries.BLOCK.get(new ResourceLocation(Initialise.MOD_ID, name));
+        return BuiltInRegistries.BLOCK.get(ResourceLocation.tryBuild(Initialise.MOD_ID, name));
     }
 
     @GameTest(template = "empty", templateNamespace = "copperandtuffbackport_test")
@@ -126,7 +126,7 @@ public class BlockParityTests {
     public void doorRecipesUseIngots(GameTestHelper context) {
         var manager = context.getLevel().getRecipeManager();
         for (String name : new String[]{"copper_door", "copper_trapdoor"}) {
-            var recipe = manager.byKey(new ResourceLocation(Initialise.MOD_ID, name)).orElseThrow();
+            var recipe = manager.byKey(ResourceLocation.tryBuild(Initialise.MOD_ID, name)).orElseThrow();
             for (var ingredient : recipe.getIngredients()) {
                 context.assertTrue(ingredient.test(Items.COPPER_INGOT.getDefaultInstance()), "Doors and trapdoors are crafted from copper ingots");
                 context.assertTrue(!ingredient.test(Items.COPPER_BLOCK.getDefaultInstance()), "Copper blocks cannot substitute for ingots");
@@ -153,7 +153,7 @@ public class BlockParityTests {
                         grate + "_from_" + material + "_stonecutting", wax + prefix + "copper_bulb"};
                 int[] yields = {1, 4, 1, 4, 4, 4};
                 for (int i = 0; i < recipes.length; i++) {
-                    var recipe = manager.byKey(new ResourceLocation(Initialise.MOD_ID, recipes[i])).orElseThrow();
+                    var recipe = manager.byKey(ResourceLocation.tryBuild(Initialise.MOD_ID, recipes[i])).orElseThrow();
                     context.assertTrue(recipe.getResultItem(context.getLevel().registryAccess()).getCount() == yields[i],
                             "1.21.1 recipe yield: " + recipes[i]);
                 }
@@ -180,7 +180,7 @@ public class BlockParityTests {
     @GameTest(template = "empty", templateNamespace = "copperandtuffbackport_test")
     public void doorHalvesAndMobTag(GameTestHelper context) {
         InteractWithDoor.create(); // Forces validation of all three villager tag redirects.
-        TagKey<Block> mobDoors = TagKey.create(Registries.BLOCK, new ResourceLocation("minecraft", "mob_interactable_doors"));
+        TagKey<Block> mobDoors = TagKey.create(Registries.BLOCK, ResourceLocation.tryBuild("minecraft", "mob_interactable_doors"));
         var world = context.getLevel();
         BlockPos pos = context.absolutePos(new BlockPos(2, 2, 2));
         world.setBlockAndUpdate(pos.below(), Blocks.STONE.defaultBlockState());

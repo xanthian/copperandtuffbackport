@@ -79,6 +79,6 @@ public final class ModCopperDecorations {
             }
         }
     }
-    private static ResourceLocation id(String name) { return new ResourceLocation(Initialise.MOD_ID, name); }
+    private static ResourceLocation id(String name) { return ResourceLocation.tryBuild(Initialise.MOD_ID, name); }
     private ModCopperDecorations() { }
 }

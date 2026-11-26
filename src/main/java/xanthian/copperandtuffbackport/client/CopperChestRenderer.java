@@ -46,7 +46,7 @@ public class CopperChestRenderer implements BlockEntityRenderer<CopperChestBlock
         model.getChild("lid").xRot = -(eased * (float)Math.PI / 2);
         model.getChild("lock").xRot = model.getChild("lid").xRot;
         String suffix = type == ChestType.LEFT ? "_left" : type == ChestType.RIGHT ? "_right" : "";
-        ResourceLocation texture = new ResourceLocation(Initialise.MOD_ID, "textures/entity/chest/" + TEXTURES[chest.getOxidationLevel().ordinal()] + suffix + ".png");
+        ResourceLocation texture = ResourceLocation.tryBuild(Initialise.MOD_ID, "textures/entity/chest/" + TEXTURES[chest.getOxidationLevel().ordinal()] + suffix + ".png");
         matrices.pushPose();
         matrices.translate(0.5, 0.5, 0.5);
         matrices.mulPose(Axis.YP.rotationDegrees(-state.getValue(ChestBlock.FACING).toYRot()));

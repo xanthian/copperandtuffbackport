@@ -18,7 +18,7 @@ import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 public abstract class ServerWorldLightningRodMixin {
     @Unique
     private static final TagKey<Block> copperandtuffbackport$lightningRods =
-            TagKey.create(Registries.BLOCK, new ResourceLocation("minecraft", "lightning_rods"));
+            TagKey.create(Registries.BLOCK, ResourceLocation.tryBuild("minecraft", "lightning_rods"));
 
     @WrapOperation(method = "tickChunk", at = @At(value = "INVOKE",
             target = "Lnet/minecraft/world/level/block/state/BlockState;is(Lnet/minecraft/world/level/block/Block;)Z"))

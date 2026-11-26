@@ -32,7 +32,7 @@ public class ItemGroupTests {
             Set<String> watched = new HashSet<>(expected);
             // Redstone uses the waxed rod in 1.21.9, replacing the older unwaxed entry.
             if (entry.getKey().equals("redstone_blocks")) watched.add("minecraft:lightning_rod");
-            var group = BuiltInRegistries.CREATIVE_MODE_TAB.get(new ResourceLocation(entry.getKey()));
+            var group = BuiltInRegistries.CREATIVE_MODE_TAB.get(ResourceLocation.tryParse(entry.getKey()));
             List<String> actual = new ArrayList<>();
             Set<String> unique = new HashSet<>();
             for (var stack : group.getDisplayItems()) {

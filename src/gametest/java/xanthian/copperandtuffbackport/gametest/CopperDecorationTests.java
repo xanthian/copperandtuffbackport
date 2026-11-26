@@ -37,11 +37,11 @@ public class CopperDecorationTests {
 
     public static void registerItems(net.minecraftforge.registries.RegisterEvent event) {
         event.register(net.minecraft.core.registries.Registries.ITEM,
-                new ResourceLocation("copperandtuffbackport_test", "forge_copper_nugget"), () -> FORGE_NUGGET);
+                ResourceLocation.tryBuild("copperandtuffbackport_test", "forge_copper_nugget"), () -> FORGE_NUGGET);
         event.register(net.minecraft.core.registries.Registries.ITEM,
-                new ResourceLocation("copperandtuffbackport_test", "legacy_copper_nugget"), () -> LEGACY_NUGGET);
+                ResourceLocation.tryBuild("copperandtuffbackport_test", "legacy_copper_nugget"), () -> LEGACY_NUGGET);
         event.register(net.minecraft.core.registries.Registries.ITEM,
-                new ResourceLocation("copperandtuffbackport_test", "modern_copper_nugget"), () -> MODERN_NUGGET);
+                ResourceLocation.tryBuild("copperandtuffbackport_test", "modern_copper_nugget"), () -> MODERN_NUGGET);
     }
     private static final LegacyRandomSource WEATHER = new LegacyRandomSource(0) {
         @Override public float nextFloat() { return 0; }
@@ -122,7 +122,7 @@ public class CopperDecorationTests {
         int[][] inputs = {{1, 0, 0, 0, 0}, {0, 9, 0, 0, 0}, {0, 1, 1, 1, 0}, {0, 8, 0, 0, 1}, {1, 2, 0, 0, 0}};
         Item[] ingredients = {Items.COPPER_INGOT, ModCopperDecorations.NUGGET, Items.COAL, Items.STICK, ModCopperDecorations.TORCH.asItem()};
         for (int i = 0; i < names.length; i++) {
-            var recipe = world.getRecipeManager().byKey(new ResourceLocation(Initialise.MOD_ID, names[i])).orElseThrow();
+            var recipe = world.getRecipeManager().byKey(ResourceLocation.tryBuild(Initialise.MOD_ID, names[i])).orElseThrow();
             var output = recipe.getResultItem(world.registryAccess());
             context.assertTrue(output.is(outputs[i]) && output.getCount() == counts[i], "Correct crafting output: " + names[i]);
             if (i < inputs.length) {
@@ -167,7 +167,7 @@ public class CopperDecorationTests {
         var player = ForgeTestPlayers.creative(context);
         var grid = new net.minecraft.world.inventory.TransientCraftingContainer(new CraftingMenu(), 3, 3);
         for (String name : new String[]{"copper_ingot_from_nuggets", "copper_torch", "copper_lantern", "copper_chain", "name_tag"}) {
-            var recipe = (net.minecraft.world.item.crafting.ShapedRecipe)world.getRecipeManager().byKey(new ResourceLocation(Initialise.MOD_ID, name)).orElseThrow();
+            var recipe = (net.minecraft.world.item.crafting.ShapedRecipe)world.getRecipeManager().byKey(ResourceLocation.tryBuild(Initialise.MOD_ID, name)).orElseThrow();
             for (int pass = 0; pass < 4; pass++) {
                 grid.clearContent();
                 for (int slot = 0; slot < recipe.getIngredients().size(); slot++) {
@@ -188,7 +188,7 @@ public class CopperDecorationTests {
                 context.assertTrue(recipe.matches(grid, world), "External and mixed nuggets craft " + name);
             }
             if (name.equals("copper_ingot_from_nuggets") || name.equals("copper_torch") || name.equals("copper_chain")) {
-                var advancement = world.getServer().getAdvancements().getAdvancement(new ResourceLocation(Initialise.MOD_ID,
+                var advancement = world.getServer().getAdvancements().getAdvancement(ResourceLocation.tryBuild(Initialise.MOD_ID,
                         "recipes/" + (name.equals("copper_ingot_from_nuggets") ? "misc/" : "decorations/") + name));
                 for (Item nugget : new Item[]{LEGACY_NUGGET, MODERN_NUGGET, FORGE_NUGGET}) {
                     player.getRecipeBook().remove(recipe);

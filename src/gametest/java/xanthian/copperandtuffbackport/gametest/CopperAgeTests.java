@@ -44,7 +44,7 @@ public class CopperAgeTests {
         var world = context.getLevel();
         var recipes = world.getRecipeManager();
         for (String family : new String[]{"copper_bars", "copper_chest"}) {
-            var recipe = recipes.byKey(new ResourceLocation(Initialise.MOD_ID, family)).orElseThrow();
+            var recipe = recipes.byKey(ResourceLocation.tryBuild(Initialise.MOD_ID, family)).orElseThrow();
             int ingots = 0;
             int chests = 0;
             for (var ingredient : recipe.getIngredients()) {
@@ -55,7 +55,7 @@ public class CopperAgeTests {
             context.assertTrue(ingots == (family.equals("copper_bars") ? 6 : 8) && chests == (family.equals("copper_bars") ? 0 : 1), "Vanilla crafting inputs");
             context.assertTrue(recipe.getResultItem(world.registryAccess()).getCount() == (family.equals("copper_bars") ? 16 : 1), "Vanilla crafting output");
             for (String prefix : ModCopperAgeBlocks.PREFIXES) {
-                var waxing = recipes.byKey(new ResourceLocation(Initialise.MOD_ID, "waxed_" + prefix + family + "_from_honeycomb")).orElseThrow();
+                var waxing = recipes.byKey(ResourceLocation.tryBuild(Initialise.MOD_ID, "waxed_" + prefix + family + "_from_honeycomb")).orElseThrow();
                 context.assertTrue(waxing.getIngredients().size() == 2 && waxing.getResultItem(world.registryAccess()).getCount() == 1, "Waxing recipes exist for all oxidation levels");
             }
         }

@@ -62,7 +62,6 @@ public class ModSounds {
             ModSounds.BLOCK_COPPER_GRATE_HIT, ModSounds.BLOCK_COPPER_GRATE_FALL);
 
     private static SoundEvent register(String name) {
-        ResourceLocation id = new ResourceLocation(Initialise.MOD_ID, name);
         return BlockRegistration.sound(name);
     }
 
